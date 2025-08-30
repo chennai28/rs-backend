@@ -1,0 +1,71 @@
+# ----- General OS / IDE / Editor files -----
+.DS_Store
+Thumbs.db
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+*.tgz
+*.temp
+.idea/
+.vscode/
+*.sublime-workspace
+*.sublime-project
+
+# ----- Node / Deno / package manager artifacts -----
+node_modules/
+dist/
+coverage/
+.tmp/
+.cache/
+.eslintcache
+.lock-wscript
+.pnpm-store/
+
+# ----- Supabase CLI & local dev files -----
+# Local Supabase configuration (generated on `supabase init`)
+.supabase/
+# If you keep a copy of the local DB dump
+supabase/*.sql
+supabase/*.dump
+
+# ----- Environment variables -----
+.env
+.env.*
+.env.local
+.env.development
+.env.production
+# If you store secrets for edge functions
+functions/.env
+functions/.env.*
+
+# ----- Edge function build output -----
+functions/**/*.zip
+functions/**/*.js
+functions/**/*.tsbuildinfo
+functions/**/*.tscache
+
+# ----- TypeScript / JavaScript caches -----
+*.tsbuildinfo
+*.js.map
+*.d.ts
+*.d.ts.map
+
+# ----- Build artefacts for front‑end / static assets -----
+public/build/
+public/.next/
+public/.nuxt/
+public/.vite/
+public/out/
+public/.parcel-cache/
+public/.cache/
+public/.temp/
+
+# ----- Miscellaneous -----
+*.bak
+*.swp
+*.swo
+*.old
+*.orig
+*.tmp
