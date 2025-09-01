@@ -40,7 +40,7 @@ const getProfileByUsername = async (supabase, username)=>{
   };
 };
 // GET Public Profile
-app.get('/users/:username', async (c)=>{
+app.get('/user-profile/:username', async (c)=>{
   const { username } = c.req.param();
   const supabase = createClient(supabaseUrl, supabaseAnonKey);
   const { profile, error: profileError } = await getProfileByUsername(supabase, username);
@@ -56,7 +56,7 @@ app.get('/users/:username', async (c)=>{
   });
 });
 // GET Own Profile (Authenticated)
-app.get('/users/me', withAuth, async (c)=>{
+app.get('/user-profile/me', withAuth, async (c)=>{
   const user = c.get('user');
   const supabase = c.get('supabase');
   const { data: profile, error } = await supabase.from('Profiles').select('*').eq('id', user.id).single();
@@ -72,7 +72,7 @@ app.get('/users/me', withAuth, async (c)=>{
   });
 });
 // PATCH Update Profile (Authenticated)
-app.patch('/users/me', withAuth, async (c)=>{
+app.patch('/user-profile/me', withAuth, async (c)=>{
   const user = c.get('user');
   const supabase = c.get('supabase');
   const body = await c.req.json();
@@ -102,7 +102,7 @@ app.patch('/users/me', withAuth, async (c)=>{
   return c.json(data[0]);
 });
 // GET Followers List
-app.get('/users/:username/followers', async (c)=>{
+app.get('/user-profile/:username/followers', async (c)=>{
   const { username } = c.req.param();
   const supabase = createClient(supabaseUrl, supabaseAnonKey);
   const { profile, error: profileError } = await getProfileByUsername(supabase, username);
@@ -113,7 +113,7 @@ app.get('/users/:username/followers', async (c)=>{
   return c.json(followers || []);
 });
 // GET Following List
-app.get('/users/:username/following', async (c)=>{
+app.get('/user-profile/:username/following', async (c)=>{
   const { username } = c.req.param();
   const supabase = createClient(supabaseUrl, supabaseAnonKey);
   const { profile, error: profileError } = await getProfileByUsername(supabase, username);
@@ -124,7 +124,7 @@ app.get('/users/:username/following', async (c)=>{
   return c.json(following || []);
 });
 // POST Follow User (Authenticated)
-app.post('/users/:username/follow', withAuth, async (c)=>{
+app.post('/user-profile/:username/follow', withAuth, async (c)=>{
   const { username } = c.req.param();
   const currentUser = c.get('user');
   const supabase = c.get('supabase');
@@ -161,7 +161,7 @@ app.post('/users/:username/follow', withAuth, async (c)=>{
   });
 });
 // DELETE Unfollow User (Authenticated)
-app.delete('/users/:username/follow', withAuth, async (c)=>{
+app.delete('/user-profile/:username/follow', withAuth, async (c)=>{
   const { username } = c.req.param();
   const currentUser = c.get('user');
   const supabase = c.get('supabase');
@@ -193,7 +193,7 @@ const FollowRequestStatus = {
   REJECTED: 'rejected'
 };
 // POST Follow Request (Authenticated)
-app.post('/users/:username/follow-request', withAuth, async (c)=>{
+app.post('/user-profile/:username/follow-request', withAuth, async (c)=>{
   const { username } = c.req.param();
   const currentUser = c.get('user');
   const supabase = c.get('supabase');
@@ -227,7 +227,7 @@ app.post('/users/:username/follow-request', withAuth, async (c)=>{
   });
 });
 // GET Pending Follow Requests (Authenticated)
-app.get('/users/me/follow-requests', withAuth, async (c)=>{
+app.get('/user-profile/me/follow-requests', withAuth, async (c)=>{
   const currentUser = c.get('user');
   const supabase = c.get('supabase');
   const { data: pendingRequests, error } = await supabase.from('Follow_requests').select('requester:Profiles(id, username, avatar_url)').eq('receiver_id', currentUser.id).eq('status', FollowRequestStatus.PENDING);
@@ -240,7 +240,7 @@ app.get('/users/me/follow-requests', withAuth, async (c)=>{
   return c.json(pendingRequests || []);
 });
 // POST Accept Follow Request (Authenticated)
-app.post('/users/:username/follow-accept', withAuth, async (c)=>{
+app.post('/user-profile/:username/follow-accept', withAuth, async (c)=>{
   const { username } = c.req.param();
   const currentUser = c.get('user');
   const supabase = c.get('supabase');
@@ -291,7 +291,7 @@ app.post('/users/:username/follow-accept', withAuth, async (c)=>{
   });
 });
 // POST Reject Follow Request (Authenticated)
-app.post('/users/:username/follow-reject', withAuth, async (c)=>{
+app.post('/user-profile/:username/follow-reject', withAuth, async (c)=>{
   const { username } = c.req.param();
   const currentUser = c.get('user');
   const supabase = c.get('supabase');
@@ -322,7 +322,7 @@ app.post('/users/:username/follow-reject', withAuth, async (c)=>{
   });
 });
 // POST Pin a Post (Authenticated)
-app.post('/users/me/pin/:postId', withAuth, async (c)=>{
+app.post('/user-profile/me/pin/:postId', withAuth, async (c)=>{
   const { postId } = c.req.param();
   const currentUser = c.get('user');
   const supabase = c.get('supabase');
@@ -338,7 +338,7 @@ app.post('/users/me/pin/:postId', withAuth, async (c)=>{
   });
 });
 // DELETE Unpin a Post (Authenticated)
-app.delete('/users/me/pin/:postId', withAuth, async (c)=>{
+app.delete('/user-profile/me/pin/:postId', withAuth, async (c)=>{
   const { postId } = c.req.param();
   const currentUser = c.get('user');
   const supabase = c.get('supabase');
