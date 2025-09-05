@@ -31,10 +31,27 @@ const authMiddleware = async (c, next)=>{
   await next();
 };
 // GET posts (list all posts)
-app.get('/posts', async (c)=>{
+app.get('/posts/user/:userid', async (c)=>{
   const supabase = c.get('supabase');
-  const { data, error } = await supabase.from('posts').select('*');
-  return c.json(data || []);
+  const userId = c.req.param('userid');
+  let query = supabase.from('posts').select('*').eq('user_id', userId);
+  if (userId != c.get('user').id) {
+    query = query.eq('is_pinned', true);
+  }
+  const { data: posts, error } = await query;
+  if (error) return c.json({
+    error: error.message
+  }, 400);
+  // Generate signed URLs for all image paths
+  const { data: signedUrls, error: urlError } = await supabase.storage.from('post_bucket').createSignedUrls(posts.map((p)=>p.image_path), 60 * 60) // 1h expiry
+  ;
+  if (urlError) throw urlError;
+  // Merge signed URLs back into posts
+  const postsWithUrls = posts.map((p, i)=>({
+      ...p,
+      imageUrl: signedUrls[i].signedUrl
+    }));
+  return c.json(postsWithUrls || []);
 });
 // GET post by ID
 app.get('/posts/:id', async (c)=>{
